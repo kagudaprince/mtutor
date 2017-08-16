@@ -5,10 +5,8 @@ services:
     image: confluentinc/cp-zookeeper
     hostname: zookeeper
     container_name: zookeeper 
-    ports:
-      - "2181:2181"
-    networks:
-      - vdx-network
+    extra_hosts:
+      - "moby:127.0.0.1"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -16,11 +14,11 @@ services:
   kafka-broker:
     image: confluentinc/cp-kafka
     hostname: kafka-broker
-    container_name: kafka-broker 
+    container_name: kafka-broker
+    extra_hosts:
+      - "moby:127.0.0.1"
     ports:
       - "9092:9092"
-    networks:
-      - vdx-network
     links:
       - zookeeper
     depends_on:
@@ -33,6 +31,8 @@ services:
     image: confluentinc/cp-schema-registry
     hostname: schema-registry
     container_name: schema-registry 
+    extra_hosts:
+      - "moby:127.0.0.1"
     links:
       - zookeeper
       - kafka-broker
@@ -45,15 +45,14 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
       SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
-    restart: always
   kafka-rest:
     image: confluentinc/cp-kafka-rest
     hostname: kafka-rest
     container_name: kafka-rest
+    extra_hosts:
+      - "moby:127.0.0.1"
     ports:
       - "8082:8082"
-    networks:
-      - vdx-network
     links:
       - zookeeper
       - kafka-broker
@@ -69,12 +68,12 @@ services:
   oracle-db:
     image: carloscastillo/rgt-oracle-xe-11g
     hostname: oracle-db
-    
+    container_name: oracle-db
+    extra_hosts:
+      - "moby:127.0.0.1"
     ports:
       - "1521:1521"
       - "15080:8080"
-    networks:
-      - vdx-network
     environment:
      - processes=200
      - SCHEMAS=VDX VDX_BATCH OBSIDIAN
@@ -83,6 +82,3 @@ services:
      - .db_scripts:/u01/scripts/batch
      - .db_data:/u01/app/oracle
 
-networks:
-    vdx-network:
-        driver: bridge
