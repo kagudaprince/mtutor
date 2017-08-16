@@ -15,7 +15,7 @@ services:
   kafka-broker:
     image: confluentinc/cp-kafka
     hostname: kafka-broker
-    ports
+    ports:
       - "9092:9092"
     networks:
       - vdx-network
@@ -39,7 +39,7 @@ services:
   kafka-rest:
     image: confluentinc/cp-kafka-rest
     hostname: kafka-rest
-    ports
+    ports:
       - "8082:8082"
     networks:
       - vdx-network
@@ -54,7 +54,7 @@ services:
   oracle-db:
     image: carloscastillo/rgt-oracle-xe-11g
     hostname: oracle-db
-    ports
+    ports:
       - "1521:1521"
       - "15080:8080"
     networks:
