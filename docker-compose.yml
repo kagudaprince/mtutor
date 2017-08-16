@@ -23,6 +23,8 @@ services:
       - vdx-network
     links:
       - zookeeper
+    depends_on:
+      - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -34,12 +36,16 @@ services:
     links:
       - zookeeper
       - kafka-broker
+    depends_on:
+      - zookeeper
+      - kafka-broker
     ports:
       - "8081:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
       SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
+    restart: always
   kafka-rest:
     image: confluentinc/cp-kafka-rest
     hostname: kafka-rest
@@ -52,6 +58,10 @@ services:
       - zookeeper
       - kafka-broker
       - schema-registry
+    depends_on:
+      - zookeeper
+      - kafka-broker
+      - schema-registry
     environment:
       KAFKA_REST_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_REST_SCHEMA_REGISTRY_URL: http://schema-registry:8081
@@ -59,7 +69,7 @@ services:
   oracle-db:
     image: carloscastillo/rgt-oracle-xe-11g
     hostname: oracle-db
-    container_name: oracle-db
+    
     ports:
       - "1521:1521"
       - "15080:8080"
