@@ -76,9 +76,33 @@ services:
       - "15080:8080"
     environment:
      - processes=200
-     - SCHEMAS=VDX VDX_BATCH OBSIDIAN
+     - SCHEMAS=VIT_VDX VDX_BATCH OBSIDIAN
      - BATCH_PARAMS=World
     volumes:
      - .db_scripts:/u01/scripts/batch
      - .db_data:/u01/app/oracle
-
+  obsidian-admin-ui:
+    hostname: obsidian-admin-ui
+    container_name: obsidian-admin-ui
+	build:
+	  context: .
+	  dockerfile: Dockerfile.obsidian
+    extra_hosts:
+      - "moby:127.0.0.1"
+	ports:
+	  - "7000:8080"
+    links:
+      - oracle-db
+    environment:
+	  TIMEZONE: UTC
+	  DB_USER: OBSIDIAN
+	  DB_PASS: OBSIDIAN
+	  DB_URL: 'jdbc:oracle:thin:@oracle-db:1521:XE'
+  portainer:
+	image: portainer/portainer
+	hostname: portainer
+	container_name: portainer
+	ports:
+      - "9000:9000"
+	volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
