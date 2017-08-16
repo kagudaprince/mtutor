@@ -19,7 +19,11 @@ RUN mkdir /tmp/obsidian /tmp/obsidian/4.3.0 \
     && java -jar /tmp/obsidian/4.3.0/Obsidian-Install-4.3.0.jar /tmp/config/build.xml \
     && cp /opt/obsidian/4.3.0/standaloneObsidianAdmin.war /opt/obsidian/4.3.0/jetty/webapps/ROOT.war \
     && cp /tmp/config/obsidian.properties /opt/obsidian/4.3.0/obsidian.properties \
-    && cp /tmp/config/logging.properties /opt/obsidian/4.3.0/jetty/resources/log4j.properties 
+    && cp /tmp/config/logging.properties /opt/obsidian/4.3.0/jetty/resources/log4j.properties \
+    && chmod +x /usr/bin/entrypoint.sh \
+	&& chmod +x /usr/bin/startup.sh \
+	&& chmod +x /usr/bin/set-env.sh
+
 
 # Exposed port.
 EXPOSE 8080
