@@ -4,6 +4,7 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper
     hostname: zookeeper
+    container_name: zookeeper 
     ports:
       - "2181:2181"
     networks:
@@ -15,6 +16,7 @@ services:
   kafka-broker:
     image: confluentinc/cp-kafka
     hostname: kafka-broker
+    container_name: kafka-broker 
     ports:
       - "9092:9092"
     networks:
@@ -28,6 +30,7 @@ services:
   schema-registry:
     image: confluentinc/cp-schema-registry
     hostname: schema-registry
+    container_name: schema-registry 
     links:
       - zookeeper
       - kafka-broker
@@ -35,10 +38,12 @@ services:
       - "8081:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+      SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
   kafka-rest:
     image: confluentinc/cp-kafka-rest
     hostname: kafka-rest
+    container_name: kafka-rest
     ports:
       - "8082:8082"
     networks:
@@ -54,6 +59,7 @@ services:
   oracle-db:
     image: carloscastillo/rgt-oracle-xe-11g
     hostname: oracle-db
+    container_name: oracle-db
     ports:
       - "1521:1521"
       - "15080:8080"
