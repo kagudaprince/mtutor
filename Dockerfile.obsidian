@@ -8,7 +8,7 @@ ENV LC_ALL en_US.UTF-8
 ADD http://obsidianscheduler.com/obsidian-4.3.0.zip /tmp/
 
 # Default entry point and startup commands.
-COPY obsidian/entrypoint.sh obsidian/startup.sh obsidian/set-env.sh /usr/bin/
+COPY obsidian/entrypoint.sh obsidian/startup.sh obsidian/set-env.sh /usr/local/bin/
 
 # Add the application-specific configuration files.
 COPY obsidian/config/* /tmp/config/
@@ -20,16 +20,16 @@ RUN mkdir /tmp/obsidian /tmp/obsidian/4.3.0 \
     && cp /opt/obsidian/4.3.0/standaloneObsidianAdmin.war /opt/obsidian/4.3.0/jetty/webapps/ROOT.war \
     && cp /tmp/config/obsidian.properties /opt/obsidian/4.3.0/obsidian.properties \
     && cp /tmp/config/logging.properties /opt/obsidian/4.3.0/jetty/resources/log4j.properties \
-    && chmod +x /usr/bin/entrypoint.sh \
-	&& chmod +x /usr/bin/startup.sh \
-	&& chmod +x /usr/bin/set-env.sh
+    && chmod +x /usr/local/bin/entrypoint.sh \
+	&& chmod +x /usr/local/bin/startup.sh \
+	&& chmod +x /usr/local/bin/set-env.sh
 
 
 # Exposed port.
 EXPOSE 8080
 
 # Default entrypoint
-ENTRYPOINT ["/usr/bin/entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Default startup
-CMD ["/usr/bin/startup.sh"]
+CMD ["/usr/local/bin/startup.sh"]
