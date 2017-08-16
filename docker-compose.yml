@@ -84,25 +84,25 @@ services:
   obsidian-admin-ui:
     hostname: obsidian-admin-ui
     container_name: obsidian-admin-ui
-	build:
-	  context: .
-	  dockerfile: Dockerfile.obsidian
+    build:
+      context: .
+      dockerfile: Dockerfile.obsidian
     extra_hosts:
       - "moby:127.0.0.1"
-	ports:
-	  - "7000:8080"
+    ports:
+      - "7000:8080"
     links:
       - oracle-db
     environment:
-	  TIMEZONE: UTC
-	  DB_USER: OBSIDIAN
-	  DB_PASS: OBSIDIAN
-	  DB_URL: 'jdbc:oracle:thin:@oracle-db:1521:XE'
+      TIMEZONE: UTC
+      DB_USER: OBSIDIAN
+      DB_PASS: OBSIDIAN
+      DB_URL: 'jdbc:oracle:thin:@oracle-db:1521:XE'
   portainer:
-	image: portainer/portainer
-	hostname: portainer
-	container_name: portainer
-	ports:
+    image: portainer/portainer
+    hostname: portainer
+    container_name: portainer
+    ports:
       - "9000:9000"
-	volumes:
+    volumes:
       - /var/run/docker.sock:/var/run/docker.sock
