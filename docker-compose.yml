@@ -97,6 +97,11 @@ services:
       - "7000:8080"
     links:
       - oracle-db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
     environment:
       TIMEZONE: UTC
       DB_USER: OBSIDIAN
