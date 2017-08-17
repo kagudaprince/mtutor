@@ -8,7 +8,7 @@ ADD http://obsidianscheduler.com/obsidian-4.3.0.zip /tmp/
 COPY setupfiles/obsidian/entrypoint.sh setupfiles/obsidian/startup.sh setupfiles/obsidian/set-env.sh /usr/local/bin/
 
 # Add the application-specific configuration files.
-COPY obsidian/config/* /tmp/config/
+COPY setupfiles/obsidian/config/* /tmp/config/
 
 # Nitty-gritty of building this container.
 RUN mkdir /tmp/obsidian /tmp/obsidian/4.3.0 \ 
