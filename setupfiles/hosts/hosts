@@ -1,0 +1,12 @@
+127.0.0.1 zookeeper
+127.0.0.1 kafka-broker
+127.0.0.1 kafka-rest
+127.0.0.1 oracle-db
+127.0.0.1 sftp-server
+127.0.0.1 schema-registry
+127.0.0.1 kafka-topics-ui
+127.0.0.1 eureka-server
+127.0.0.1 config-server
+127.0.0.1 portainer
+127.0.0.1 zuul-server
+127.0.0.1 obsidian-admin-ui

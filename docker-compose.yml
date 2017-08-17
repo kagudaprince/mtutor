@@ -29,6 +29,7 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker:9092
+
   schema-registry:
     image: confluentinc/cp-schema-registry
     hostname: schema-registry
@@ -47,6 +48,7 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
       SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
+
   kafka-rest:
     image: confluentinc/cp-kafka-rest
     hostname: kafka-rest
@@ -69,6 +71,7 @@ services:
       KAFKA_REST_LISTENERS: http://kafka-rest:8082
       KAFKA_REST_HOST_NAME: kafka-rest
     restart: always
+
   oracle-db:
     image: carloscastillo/rgt-oracle-xe-11g
     hostname: oracle-db
@@ -83,8 +86,9 @@ services:
      - SCHEMAS=VIT_VDX VDX_BATCH OBSIDIAN
      - BATCH_PARAMS=World
     volumes:
-     - CURR_DIR/db_scripts:/u01/scripts/batch
-     - CURR_DIR/db_data:/u01/app/oracle
+     - CURR_DIR/setupfiles/db_scripts:/u01/scripts/batch
+     - CURR_DIR/setupfiles/db_data:/u01/app/oracle
+
   obsidian-admin-ui:
     hostname: obsidian-admin-ui
     container_name: obsidian-admin-ui
@@ -107,11 +111,46 @@ services:
       DB_USER: OBSIDIAN
       DB_PASS: OBSIDIAN
       DB_URL: 'jdbc:oracle:thin:@oracle-db:1521:XE'
+
+  sftp-server:
+    image: atmoz/sftp
+    hostname: sftp-server
+    container_name: sftp-server
+    extra_hosts:
+      - "moby:127.0.0.1"
+    volumes:
+      - CURR_DIR/volumes/sftp:/home/partner/upload
+      - CURR_DIR/setupfiles/ssh/id_vdx.pub:/home/partner/.ssh/keys/id_vdx.pub
+    ports:
+      - "2222:22"
+    command: partner:password:1001
+
   portainer:
     image: portainer/portainer
     hostname: portainer
     container_name: portainer
+    extra_hosts:
+      - "moby:127.0.0.1"
     ports:
       - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - CURR_DIR/volumes/portainer:/data
+
+  kafka-topics-ui:
+    image: landoop/kafka-topics-ui
+    hostname: kafka-topics-ui
+    container_name: kafka-topics-ui
+    extra_hosts:
+      - "moby:127.0.0.1"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - kafka-rest
+    links:
+      - kafka-rest
+    environment:
+      KAFKA_REST_PROXY_URL: http://kafka-rest:8082
+      PROXY: true
+      MAX_BYTES: 150000
+

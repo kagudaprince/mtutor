@@ -1,14 +1,11 @@
 # Dockerfile for Obsidian Scheduler v4.3.0
 FROM openjdk:8-jdk
 
-# Default to UTF-8 file.encoding.
-ENV LC_ALL en_US.UTF-8
-
 # Add the executables into temp.
 ADD http://obsidianscheduler.com/obsidian-4.3.0.zip /tmp/
 
 # Default entry point and startup commands.
-COPY obsidian/entrypoint.sh obsidian/startup.sh obsidian/set-env.sh /usr/local/bin/
+COPY setupfiles/obsidian/entrypoint.sh setupfiles/obsidian/startup.sh setupfiles/obsidian/set-env.sh /usr/local/bin/
 
 # Add the application-specific configuration files.
 COPY obsidian/config/* /tmp/config/
