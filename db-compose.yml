@@ -13,8 +13,7 @@ services:
     environment:
      - processes=300
      - SCHEMAS=VIT_VDX VDX_BATCH OBSIDIAN
+     - ORACLE_ALLOW_REMOTE="true"
     volumes:
      - CURR_DIR/setupfiles/db_scripts:/u01/scripts/batch
      - CURR_DIR/setupfiles/db_data:/u01/app/oracle
-
-
