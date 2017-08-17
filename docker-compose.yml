@@ -83,8 +83,8 @@ services:
      - SCHEMAS=VIT_VDX VDX_BATCH OBSIDIAN
      - BATCH_PARAMS=World
     volumes:
-     - .db_scripts:/u01/scripts/batch
-     - .db_data:/u01/app/oracle
+     - CURR_DIR/db_scripts:/u01/scripts/batch
+     - CURR_DIR/db_data:/u01/app/oracle
   obsidian-admin-ui:
     hostname: obsidian-admin-ui
     container_name: obsidian-admin-ui
