@@ -1,0 +1,20 @@
+---
+version: '3'
+services:
+  oracle-db:
+    image: carloscastillo/rgt-oracle-xe-11g
+    hostname: oracle-db
+    container_name: oracle-db
+    extra_hosts:
+      - "moby:127.0.0.1"
+    ports:
+      - "1521:1521"
+      - "15080:8080"
+    environment:
+     - processes=300
+     - SCHEMAS=VIT_VDX VDX_BATCH OBSIDIAN
+    volumes:
+     - CURR_DIR/setupfiles/db_scripts:/u01/scripts/batch
+     - CURR_DIR/setupfiles/db_data:/u01/app/oracle
+
+

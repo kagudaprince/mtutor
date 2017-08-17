@@ -1,0 +1,137 @@
+---
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    extra_hosts:
+      - "moby:127.0.0.1"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka-broker:
+    image: confluentinc/cp-kafka
+    hostname: kafka-broker
+    container_name: kafka-broker
+    extra_hosts:
+      - "moby:127.0.0.1"
+    ports:
+      - "9092:9092"
+    links:
+      - zookeeper
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker:9092
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry
+    hostname: schema-registry
+    container_name: schema-registry
+    extra_hosts:
+      - "moby:127.0.0.1"
+    links:
+      - zookeeper
+      - kafka-broker
+    depends_on:
+      - zookeeper
+      - kafka-broker
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+      SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
+
+  kafka-rest:
+    image: confluentinc/cp-kafka-rest
+    hostname: kafka-rest
+    container_name: kafka-rest
+    extra_hosts:
+      - "moby:127.0.0.1"
+    ports:
+      - "8082:8082"
+    links:
+      - zookeeper
+      - kafka-broker
+      - schema-registry
+    depends_on:
+      - zookeeper
+      - kafka-broker
+      - schema-registry
+    environment:
+      KAFKA_REST_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_REST_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      KAFKA_REST_LISTENERS: http://kafka-rest:8082
+      KAFKA_REST_HOST_NAME: kafka-rest
+    restart: always
+
+  obsidian-admin-ui:
+    hostname: obsidian-admin-ui
+    container_name: obsidian-admin-ui
+    build:
+      context: .
+      dockerfile: Dockerfile.obsidian
+    extra_hosts:
+      - "moby:127.0.0.1"
+    ports:
+      - "7000:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+    environment:
+      TIMEZONE: UTC
+      DB_USER: OBSIDIAN
+      DB_PASS: OBSIDIAN
+      DB_URL: 'jdbc:oracle:thin:@oracle-db:1521:XE'
+
+  sftp-server:
+    image: atmoz/sftp
+    hostname: sftp-server
+    container_name: sftp-server
+    extra_hosts:
+      - "moby:127.0.0.1"
+    volumes:
+      - CURR_DIR/volumes/sftp:/home/partner/upload
+      - CURR_DIR/setupfiles/ssh/id_vdx.pub:/home/partner/.ssh/keys/id_vdx.pub
+    ports:
+      - "2222:22"
+    command: partner:password:1001
+
+  portainer:
+    image: portainer/portainer
+    hostname: portainer
+    container_name: portainer
+    extra_hosts:
+      - "moby:127.0.0.1"
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - CURR_DIR/volumes/portainer:/data
+
+  kafka-topics-ui:
+    image: landoop/kafka-topics-ui
+    hostname: kafka-topics-ui
+    container_name: kafka-topics-ui
+    extra_hosts:
+      - "moby:127.0.0.1"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - kafka-rest
+    links:
+      - kafka-rest
+    environment:
+      KAFKA_REST_PROXY_URL: http://kafka-rest:8082
+      PROXY: true
+      MAX_BYTES: 150000
+
