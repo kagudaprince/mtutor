@@ -1,0 +1,65 @@
+---
+version: '3'
+services:
+  eureka-server:
+    hostname: eureka-server
+    container_name: eureka-server
+    build:
+      context: dockerfiles
+      dockerfile: Dockerfile.microjava
+    extra_hosts:
+      - "moby:127.0.0.1"
+    ports:
+      - "8080:8080"
+    image: eureka-server:latest
+    volumes:
+      - EUREKA_SERVER_WORKSPACE/target:/home/java/app
+    restart: on-failure
+
+  config-server:
+    hostname: config-server
+    container_name: config-server
+    build:
+      context: dockerfiles
+      dockerfile: Dockerfile.microjava
+    extra_hosts:
+      - "moby:127.0.0.1"
+    links:
+      - eureka-server:eureka-server
+    depends_on:
+      - eureka-server
+    ports:
+      - "6000:8080"
+    image: config-server:latest
+    volumes:
+      - CONFIG_SERVER_WORKSPACE/target:/home/java/app
+      - CONFIGS_WORKSPACE:/home/java/repo
+    restart: on-failure
+
+  zuul-server:
+    hostname: zuul-server
+    container_name: zuul-server
+    build:
+      context: dockerfiles
+      dockerfile: Dockerfile.microjava
+    extra_hosts:
+      - "moby:127.0.0.1"
+    links:
+      - eureka-server:eureka-server
+      - config-server:config-server
+    depends_on:
+      - eureka-server
+      - config-server
+    ports:
+      - "80:8080"
+    image: zuul-server:latest
+    volumes:
+      - ZUUL_SERVER_WORKSPACE/target:/home/java/app
+    environment:
+      SPRING_PROFILES_ACTIVE: PROJECT_PROFILEl
+      SPRING_CLOUD_CONFIG_LABEL: CONFIGS_BRANCH
+      AUTHENTICATION_SECURED: "false"
+      AUTHENTICATION_ENABLED: "false"
+    restart: on-failure
+
+

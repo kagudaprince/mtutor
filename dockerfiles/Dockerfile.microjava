@@ -1,0 +1,18 @@
+FROM images.devops.ose.discsrv.co.za:80/base-images/java-8
+MAINTAINER Vitality Group
+
+EXPOSE 8080
+VOLUME /tmp
+
+ADD setupfiles/java/entrypoint.sh /usr/bin/entrypoint.sh
+ADD setupfiles/java/startup.sh /usr/bin/startup.sh
+
+RUN \
+   useradd -m -u 1000 -s /bin/bash java && \
+   chown -R java:java /home/java &&        \
+   chmod +x /usr/bin/entrypoint.sh &&      \
+   chmod +x /usr/bin/startup.sh
+
+USER java
+ENTRYPOINT ["/usr/bin/entrypoint.sh"]
+CMD ["/usr/bin/startup.sh"]

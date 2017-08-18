@@ -86,21 +86,39 @@ services:
       SCHEMAS: VIT_VDX VDX_BATCH OBSIDIAN
       ORACLE_ALLOW_REMOTE: "true"
     volumes:
-     - CURR_DIR/setupfiles/db_scripts:/u01/scripts/batch
-     - CURR_DIR/setupfiles/db_data:/u01/app/oracle
+     - CURR_DIR/dockerfiles/setupfiles/db_scripts:/u01/scripts/batch
+     - CURR_DIR/dockerfiles/setupfiles/db_data:/u01/app/oracle
+
+  mysql-db:
+    image: mysql
+    hostname: mysql-db
+    container_name: mysql-db
+    extra_hosts:
+      - "moby:127.0.0.1"
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: obsidian
+      MYSQL_USER: obsidian
+      MYSQL_PASSWORD: obsidian
+    volumes:
+     - CURR_DIR/volumes/mysql:/var/lib/mysql
 
   obsidian-admin-ui:
     hostname: obsidian-admin-ui
     container_name: obsidian-admin-ui
     build:
-      context: .
+      context: dockerfiles
       dockerfile: Dockerfile.obsidian
     extra_hosts:
       - "moby:127.0.0.1"
     ports:
       - "7000:8080"
     links:
-      - oracle-db
+      - mysql-db:mysql-db
+    depends_on:
+      - mysql-db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 1m30s
@@ -108,9 +126,9 @@ services:
       retries: 3
     environment:
       TIMEZONE: UTC
-      DB_USER: OBSIDIAN
-      DB_PASS: OBSIDIAN
-      DB_URL: 'jdbc:oracle:thin:@oracle-db:1521:XE'
+      DB_USER: obsidian
+      DB_PASS: obsidian
+      DB_URL: 'jdbc:mysql://mysql-db:3306/obsidian'
 
   sftp-server:
     image: atmoz/sftp
@@ -120,7 +138,7 @@ services:
       - "moby:127.0.0.1"
     volumes:
       - CURR_DIR/volumes/sftp:/home/partner/upload
-      - CURR_DIR/setupfiles/ssh/id_vdx.pub:/home/partner/.ssh/keys/id_vdx.pub
+      - CURR_DIR/dockerfiles/setupfiles/ssh/id_vdx.pub:/home/partner/.ssh/keys/id_vdx.pub
     ports:
       - "2222:22"
     command: partner:password:1001

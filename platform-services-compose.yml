@@ -76,7 +76,7 @@ services:
     hostname: obsidian-admin-ui
     container_name: obsidian-admin-ui
     build:
-      context: .
+      context: dockerfiles
       dockerfile: Dockerfile.obsidian
     extra_hosts:
       - "moby:127.0.0.1"
@@ -101,7 +101,7 @@ services:
       - "moby:127.0.0.1"
     volumes:
       - CURR_DIR/volumes/sftp:/home/partner/upload
-      - CURR_DIR/setupfiles/ssh/id_vdx.pub:/home/partner/.ssh/keys/id_vdx.pub
+      - CURR_DIR/dockerfiles/setupfiles/ssh/id_vdx.pub:/home/partner/.ssh/keys/id_vdx.pub
     ports:
       - "2222:22"
     command: partner:password:1001

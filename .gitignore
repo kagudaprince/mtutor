@@ -5,6 +5,7 @@ target/
 *.jar
 *.ear
 *.war
+*.bck
 
 ## Eclipse project files
 .settings/
