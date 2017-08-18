@@ -10,3 +10,4 @@
 127.0.0.1 portainer
 127.0.0.1 zuul-server
 127.0.0.1 obsidian-admin-ui
+127.0.0.1 mysql-db
