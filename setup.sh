@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Starting vdx setup"
 
-curr_dir="$(pwd)"
+CURR_DIR="$(pwd)"
 
 place_holder="CURR_DIR"
 
@@ -42,18 +42,18 @@ else
    cp $CURR_DIR/db-compose.yml $COMPOSE_BCK
 fi
 
-sed -i -E "s|$place_holder|$curr_dir|g" $curr_dir/all-platform-services-compose.yml
-sed -i -E "s|$place_holder|$curr_dir|g" $curr_dir/db-compose.yml
-sed -i -E "s|$place_holder|$curr_dir|g" $curr_dir/platform-services-compose.yml
-sed -i -E "s|$place_holder|$curr_dir|g" $curr_dir/vdx-services-compose.yml
+sed -i -E "s|$place_holder|$CURR_DIR|g" $CURR_DIR/all-platform-services-compose.yml
+sed -i -E "s|$place_holder|$CURR_DIR|g" $CURR_DIR/db-compose.yml
+sed -i -E "s|$place_holder|$CURR_DIR|g" $CURR_DIR/platform-services-compose.yml
+sed -i -E "s|$place_holder|$CURR_DIR|g" $CURR_DIR/vdx-services-compose.yml
 
-chmod +x $curr_dir/dockerfiles/setupfiles/obsidian/entrypoint.sh
-chmod +x $curr_dir/dockerfiles/setupfiles/obsidian/startup.sh
-chmod +x $curr_dir/dockerfiles/setupfiles/obsidian/set-env.sh
+chmod +x $CURR_DIR/dockerfiles/setupfiles/obsidian/entrypoint.sh
+chmod +x $CURR_DIR/dockerfiles/setupfiles/obsidian/startup.sh
+chmod +x $CURR_DIR/dockerfiles/setupfiles/obsidian/set-env.sh
 
-mkdir $curr_dir/volumes
-mkdir $curr_dir/volumes/sftp
-mkdir $curr_dir/volumes/portainer
-mkdir $curr_dir/volumes/oracle
-mkdir $curr_dir/volumes/mysql
+mkdir $CURR_DIR/volumes
+mkdir $CURR_DIR/volumes/sftp
+mkdir $CURR_DIR/volumes/portainer
+mkdir $CURR_DIR/volumes/oracle
+mkdir $CURR_DIR/volumes/mysql
 echo "Done with setup"
