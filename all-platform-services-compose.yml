@@ -101,9 +101,9 @@ services:
     ports:
       - "7000:8080"
     links:
-      - mysql-db:mysql-db
+      - oracle-db:oracle-db-db
     depends_on:
-      - mysql-db
+      - oracle-db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 1m30s
