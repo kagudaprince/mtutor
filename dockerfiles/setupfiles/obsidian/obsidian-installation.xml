@@ -31,12 +31,12 @@
 </com.izforge.izpack.panels.UserInputPanel>
 <com.izforge.izpack.panels.UserInputPanel id="UserInputPanel.3">
 <userInput>
-<entry key="db.schema" value=""/>
-<entry key="database.url" value="jdbc:mysql://mysql-db:3306/obsidian"/>
-<entry key="database.password" value="obsidian"/>
+<entry key="db.schema" value="OBSIDIAN"/>
+<entry key="database.url" value="jdbc:oracle:thin:@oracle-db:1521:XE"/>
+<entry key="database.password" value="OBSIDIAN"/>
 <entry key="database.table.prefix" value=""/>
 <entry key="database.connection.timeout" value="2000"/>
-<entry key="database.username" value="obsidian"/>
+<entry key="database.username" value="OBSIDIAN"/>
 <entry key="database.jndi.name" value=""/>
 <entry key="database.max.connections" value="40"/>
 <entry key="include.all.jdbc" value="true"/>
