@@ -82,6 +82,10 @@ services:
       - "moby:127.0.0.1"
     ports:
       - "7000:8080"
+    links:
+      - oracle-db:oracle-db
+    depends_on:
+      - oracle-db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 1m30s
@@ -92,6 +96,7 @@ services:
       DB_USER: OBSIDIAN
       DB_PASS: OBSIDIAN
       DB_URL: 'jdbc:oracle:thin:@oracle-db:1521:XE'
+    restart: on-failure
 
   sftp-server:
     image: atmoz/sftp

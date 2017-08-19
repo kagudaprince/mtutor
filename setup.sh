@@ -51,6 +51,7 @@ chmod +x $CURR_DIR/dockerfiles/setupfiles/obsidian/entrypoint.sh
 chmod +x $CURR_DIR/dockerfiles/setupfiles/obsidian/startup.sh
 chmod +x $CURR_DIR/dockerfiles/setupfiles/obsidian/set-env.sh
 chmod +x $CURR_DIR/dockerfiles/setupfiles/wait/wait-for-it.sh
+chmod +x $CURR_DIR/dockerfiles/setupfiles/obsidian/setenv.sh
 
 mkdir $CURR_DIR/volumes
 mkdir $CURR_DIR/volumes/sftp
