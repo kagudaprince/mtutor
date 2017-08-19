@@ -101,7 +101,7 @@ services:
     ports:
       - "7000:8080"
     links:
-      - oracle-db:oracle-db-db
+      - oracle-db:oracle-db
     depends_on:
       - oracle-db
     healthcheck:
@@ -114,7 +114,7 @@ services:
       DB_USER: OBSIDIAN
       DB_PASS: OBSIDIAN
       DB_URL: 'jdbc:oracle:thin:@oracle-db:1521:XE'
-    command:  ["/usr/bin/wait-for-it.sh", "oracle-db:1521", "-t", "180"]
+    restart: on-failure
 
   sftp-server:
     image: atmoz/sftp
