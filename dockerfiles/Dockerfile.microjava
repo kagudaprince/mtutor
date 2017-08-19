@@ -6,12 +6,14 @@ VOLUME /tmp
 
 ADD setupfiles/java/entrypoint.sh /usr/bin/entrypoint.sh
 ADD setupfiles/java/startup.sh /usr/bin/startup.sh
+ADD setupfiles/wait/wait-for-it.sh /usr/bin/wait-for-it.sh
 
 RUN \
    useradd -m -u 1000 -s /bin/bash java && \
    chown -R java:java /home/java &&        \
    chmod +x /usr/bin/entrypoint.sh &&      \
-   chmod +x /usr/bin/startup.sh
+   chmod +x /usr/bin/startup.sh  &&        \
+   chmod +x /usr/bin/wait-for-it.sh
 
 USER java
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
