@@ -3,6 +3,7 @@ FROM tomcat:jre8
 ADD http://obsidianscheduler.com/obsidian-4.3.0.zip /install/
 COPY setupfiles/obsidian/obsidian-installation.xml /install/
 ADD setupfiles/wait/wait-for-it.sh /usr/bin/wait-for-it.sh
+ADD setupfiles/obsidian/setenv.sh /usr/local/tomcat/bin/setenv.sh
 
 WORKDIR /install
 RUN apt-get update && \
@@ -10,9 +11,12 @@ RUN apt-get update && \
     apt-get clean && \
     unzip obsidian-4.3.0.zip && \
     chmod +x /usr/bin/wait-for-it.sh && \
+    chmod +x /usr/local/tomcat/bin/setenv.sh && \
     java -jar Obsidian-Install-4.3.0.jar obsidian-installation.xml && \
     mv /usr/local/tomcat/webapps/ROOT /usr/local/tomcat/webapps/ROOT.bak && \
     ln -s /usr/share/obsidian/obsidian.war /usr/local/tomcat/webapps/ROOT.war
+
+
 
 WORKDIR $CATALINA_HOME
 
